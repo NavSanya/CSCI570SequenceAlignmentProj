@@ -79,11 +79,7 @@ public class Basic {
   public void writeFile(double time, double space) {
     try {
       File myObj = new File("SampleTestCases/testOut1.txt");
-      if (myObj.createNewFile()) {
-        //System.out.println("File created: " + myObj.getName());
-      } else {
-        //System.out.println("File already exists.");
-      }
+      myObj.createNewFile();
     } catch (IOException e) {
       System.out.println("An error occurred.");
       e.printStackTrace();
@@ -94,7 +90,6 @@ public class Basic {
       String s = opt[str1.length()-1][str2.length()-1] + "\n"+finalStr1+"\n"+ finalStr2 +"\n"+ time+"\n"+space;
       myWriter.write(s);
       myWriter.close();
-      //System.out.println("Successfully wrote to the file.");
     } catch (IOException e) {
       System.out.println("An error occurred.");
       e.printStackTrace();
@@ -145,29 +140,36 @@ public class Basic {
     int j = l2 - 1;
     finalStr1 = "";
     finalStr2 = "";
+   if (i != 0 && j != 0 && opt[i][j] == matrix[charMap.get(str1.charAt(i))][charMap.get(str2.charAt(j))] + opt[i-1][j-1]) {
+      finalStr1 += (str1.charAt(i));
+      finalStr2 += (str2.charAt(j));
+    } else if (j != 0 && opt[i][j] == delta + opt[i][j - 1]) { //gap
+      finalStr1 = finalStr1 + '_';
+      finalStr2 = finalStr2 + str2.charAt(j);
+      j--;
+    } else if(i != 0 && opt[i][j] == delta + opt[i - 1][j]) { //gap
+      finalStr1 = finalStr1 + str1.charAt(i);
+      finalStr2 = finalStr2 + '_';
+      i--;
+    }
     while (i != 0 || j != 0) {
       //mismatch check
-      if (
-        i >= 1 &&
-        j >= 1 &&
-        opt[i][j] ==
-        matrix[charMap.get(str1.charAt(i))][charMap.get(str2.charAt(j))] +
-        opt[i - 1][j - 1]
-      ) {
-        finalStr1 += (str1.charAt(i));
-        finalStr2 += (str2.charAt(j));
+      if (i >= 1 && j >= 1 && opt[i][j] == matrix[charMap.get(str1.charAt(i - 1))][charMap.get(str2.charAt(j - 1))] + opt[i - 1][j - 1] ) {
+        finalStr1 += (str1.charAt(i - 1));
+        finalStr2 += (str2.charAt(j - 1));
         i--;
         j--;
       } else if (j >= 1 && opt[i][j] == delta + opt[i][j - 1]) { //gap
         finalStr1 = finalStr1 + '_';
-        finalStr2 = finalStr2 + str2.charAt(j);
+        finalStr2 = finalStr2 + str2.charAt(j-1);
         j--;
       } else { //gap
-        finalStr1 = finalStr1 + str1.charAt(i);
+        finalStr1 = finalStr1 + str1.charAt(i-1);
         finalStr2 = finalStr2 + '_';
         i--;
       }
     }
+    
 
     StringBuilder input1 = new StringBuilder();
     input1.append(finalStr1);
@@ -184,7 +186,7 @@ public class Basic {
     double startSpace = getMemory();
     double startTime = getTime();
     Basic basic = new Basic();
-    File file = new File("SampleTestCases/input1.txt");
+    File file = new File("SampleTestCases/input2.txt");
     basic.readFile(file);
     basic.alignment();
     basic.getFinalString();
