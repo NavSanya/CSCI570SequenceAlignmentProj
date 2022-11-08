@@ -106,29 +106,22 @@ public class Basic {
   }
 
   public void alignment() {
-    opt = new int[str1.length()][str2.length()];
+    opt = new int[str1.length()+1][str2.length()+1];
 
-    for (int i = 0; i < str1.length(); i++) {
+    for (int i = 0; i <= str1.length(); i++) {
       opt[i][0] = delta * i;
     }
-    for (int i = 0; i < str2.length(); i++) {
+    for (int i = 0; i <= str2.length(); i++) {
       opt[0][i] = delta * i;
     }
-    for (int i = 1; i < str1.length(); i++) {
-      for (int j = 1; j < str2.length(); j++) {
+    for (int i = 1; i <= str1.length(); i++) {
+      for (int j = 1; j <= str2.length(); j++) {
         char c1 = str1.charAt(i - 1);/* changed */
         char c2 = str2.charAt(j - 1);/* changed */
         int a = charMap.get(c1);
         int b = charMap.get(c2);
-        if (c1 == c2) {
-          opt[i][j] = opt[i - 1][j - 1];
-        } else {
-          opt[i][j] =
-            Math.min(
-              matrix[a][b] + opt[i - 1][j - 1],
-              Math.min(delta + opt[i][j - 1], delta + opt[i - 1][j])
-            );
-        }
+          opt[i][j] = Math.min(matrix[a][b] + opt[i - 1][j - 1],
+                                Math.min(delta + opt[i][j - 1], delta + opt[i - 1][j]));
       }
     }
   }
@@ -136,22 +129,10 @@ public class Basic {
   private void getFinalString() {
     int l1 = str1.length();
     int l2 = str2.length();
-    int i = l1 - 1;
-    int j = l2 - 1;
+    int i = l1;
+    int j = l2;
     finalStr1 = "";
     finalStr2 = "";
-   if (i != 0 && j != 0 && opt[i][j] == matrix[charMap.get(str1.charAt(i))][charMap.get(str2.charAt(j))] + opt[i-1][j-1]) {
-      finalStr1 += (str1.charAt(i));
-      finalStr2 += (str2.charAt(j));
-    } else if (j != 0 && opt[i][j] == delta + opt[i][j - 1]) { //gap
-      finalStr1 = finalStr1 + '_';
-      finalStr2 = finalStr2 + str2.charAt(j);
-      j--;
-    } else if(i != 0 && opt[i][j] == delta + opt[i - 1][j]) { //gap
-      finalStr1 = finalStr1 + str1.charAt(i);
-      finalStr2 = finalStr2 + '_';
-      i--;
-    }
     while (i != 0 || j != 0) {
       //mismatch check
       if (i >= 1 && j >= 1 && opt[i][j] == matrix[charMap.get(str1.charAt(i - 1))][charMap.get(str2.charAt(j - 1))] + opt[i - 1][j - 1] ) {
@@ -186,7 +167,7 @@ public class Basic {
     double startSpace = getMemory();
     double startTime = getTime();
     Basic basic = new Basic();
-    File file = new File("SampleTestCases/input2.txt");
+    File file = new File("SampleTestCases/input1.txt");
     basic.readFile(file);
     basic.alignment();
     basic.getFinalString();
@@ -201,12 +182,7 @@ public class Basic {
     int n2 = basic.str2.length();
     System.out.println(basic.opt[n1 - 1][n2 - 1]);
     System.out.println(
-      "Complexity analysis: \nTime: " +
-      time +
-      " milliseconds\nSpace: " +
-      space +
-      " KB"
-    );
+    "Complexity analysis: \nTime: " +  time +  " milliseconds\nSpace: " +  space + " KB");
     basic.writeFile(time, space);
   }
 }
