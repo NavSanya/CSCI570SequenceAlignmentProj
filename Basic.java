@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 
 public class Basic {
@@ -77,7 +76,30 @@ public class Basic {
     }
   }
 
-  public void writeFile() {}
+  public void writeFile(double time, double space) {
+    try {
+      File myObj = new File("SampleTestCases/testOut1.txt");
+      if (myObj.createNewFile()) {
+        //System.out.println("File created: " + myObj.getName());
+      } else {
+        //System.out.println("File already exists.");
+      }
+    } catch (IOException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
+
+    try {
+      FileWriter myWriter = new FileWriter("SampleTestCases/testOut1.txt");
+      String s = opt[str1.length()-1][str2.length()-1] + "\n"+finalStr1+"\n"+ finalStr2 +"\n"+ time+"\n"+space;
+      myWriter.write(s);
+      myWriter.close();
+      //System.out.println("Successfully wrote to the file.");
+    } catch (IOException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
+  }
 
   private static double getMemory() {
     double total = Runtime.getRuntime().totalMemory();
@@ -116,7 +138,7 @@ public class Basic {
     }
   }
 
-  void finalString() {
+  private void getFinalString() {
     int l1 = str1.length();
     int l2 = str2.length();
     int i = l1 - 1;
@@ -129,21 +151,19 @@ public class Basic {
         i >= 1 &&
         j >= 1 &&
         opt[i][j] ==
-        matrix[charMap.get(str1.charAt(i - 1))][charMap.get(
-            str2.charAt(j - 1)
-          )] +
+        matrix[charMap.get(str1.charAt(i))][charMap.get(str2.charAt(j))] +
         opt[i - 1][j - 1]
       ) {
-        finalStr1 += (str1.charAt(i - 1));
-        finalStr2 += (str2.charAt(j - 1));
+        finalStr1 += (str1.charAt(i));
+        finalStr2 += (str2.charAt(j));
         i--;
         j--;
       } else if (j >= 1 && opt[i][j] == delta + opt[i][j - 1]) { //gap
         finalStr1 = finalStr1 + '_';
-        finalStr2 = finalStr2 + str2.charAt(j - 1);
+        finalStr2 = finalStr2 + str2.charAt(j);
         j--;
       } else { //gap
-        finalStr1 = finalStr1 + str1.charAt(i - 1);
+        finalStr1 = finalStr1 + str1.charAt(i);
         finalStr2 = finalStr2 + '_';
         i--;
       }
@@ -167,7 +187,7 @@ public class Basic {
     File file = new File("SampleTestCases/input1.txt");
     basic.readFile(file);
     basic.alignment();
-    basic.finalString();
+    basic.getFinalString();
     double endSpace = getMemory();
     double endTime = getTime();
     double space = endSpace - startSpace;
@@ -185,5 +205,6 @@ public class Basic {
       space +
       " KB"
     );
+    basic.writeFile(time, space);
   }
 }
