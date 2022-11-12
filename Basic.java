@@ -76,18 +76,11 @@ public class Basic {
     }
   }
 
-  public void writeFile(double time, double space) {
+  public void writeFile(String fileName, double time, double space) {
     try {
-      File myObj = new File("SampleTestCases/testOut1.txt");
-      myObj.createNewFile();
-    } catch (IOException e) {
-      System.out.println("An error occurred.");
-      e.printStackTrace();
-    }
-
-    try {
-      FileWriter myWriter = new FileWriter("SampleTestCases/testOut1.txt");
-      String s = opt[str1.length()-1][str2.length()-1] + "\n"+finalStr1+"\n"+ finalStr2 +"\n"+ time+"\n"+space;
+      FileWriter myWriter = new FileWriter(fileName);
+      String s =
+        opt[str1.length() - 1][str2.length() - 1] + "\n" + finalStr1 + "\n" + finalStr2 + "\n" + time + "\n" + space;
       myWriter.write(s);
       myWriter.close();
     } catch (IOException e) {
@@ -98,15 +91,15 @@ public class Basic {
 
   private static double getMemory() {
     double total = Runtime.getRuntime().totalMemory();
-    return (total - Runtime.getRuntime().freeMemory()) / 10e3;
+    return (total - Runtime.getRuntime().freeMemory()) / 1e3;
   }
 
   private static double getTime() {
-    return System.nanoTime() / 10e6;
+    return System.nanoTime() / 1e6;
   }
 
   public void alignment() {
-    opt = new int[str1.length()+1][str2.length()+1];
+    opt = new int[str1.length() + 1][str2.length() + 1];
 
     for (int i = 0; i <= str1.length(); i++) {
       opt[i][0] = delta * i;
@@ -120,8 +113,11 @@ public class Basic {
         char c2 = str2.charAt(j - 1);/* changed */
         int a = charMap.get(c1);
         int b = charMap.get(c2);
-          opt[i][j] = Math.min(matrix[a][b] + opt[i - 1][j - 1],
-                                Math.min(delta + opt[i][j - 1], delta + opt[i - 1][j]));
+        opt[i][j] =
+          Math.min(
+            matrix[a][b] + opt[i - 1][j - 1],
+            delta + Math.min(opt[i][j - 1], opt[i - 1][j])
+          );
       }
     }
   }
@@ -135,22 +131,29 @@ public class Basic {
     finalStr2 = "";
     while (i != 0 || j != 0) {
       //mismatch check
-      if (i >= 1 && j >= 1 && opt[i][j] == matrix[charMap.get(str1.charAt(i - 1))][charMap.get(str2.charAt(j - 1))] + opt[i - 1][j - 1] ) {
+      if (
+        i >= 1 &&
+        j >= 1 &&
+        opt[i][j] ==
+        matrix[charMap.get(str1.charAt(i - 1))][charMap.get(
+            str2.charAt(j - 1)
+          )] +
+        opt[i - 1][j - 1]
+      ) {
         finalStr1 += (str1.charAt(i - 1));
         finalStr2 += (str2.charAt(j - 1));
         i--;
         j--;
       } else if (j >= 1 && opt[i][j] == delta + opt[i][j - 1]) { //gap
         finalStr1 = finalStr1 + '_';
-        finalStr2 = finalStr2 + str2.charAt(j-1);
+        finalStr2 = finalStr2 + str2.charAt(j - 1);
         j--;
       } else { //gap
-        finalStr1 = finalStr1 + str1.charAt(i-1);
+        finalStr1 = finalStr1 + str1.charAt(i - 1);
         finalStr2 = finalStr2 + '_';
         i--;
       }
     }
-    
 
     StringBuilder input1 = new StringBuilder();
     input1.append(finalStr1);
@@ -163,11 +166,12 @@ public class Basic {
     finalStr2 = input2.toString();
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     double startSpace = getMemory();
     double startTime = getTime();
+    String iFN = args[0];
     Basic basic = new Basic();
-    File file = new File("SampleTestCases/input1.txt");
+    File file = new File(iFN);
     basic.readFile(file);
     basic.alignment();
     basic.getFinalString();
@@ -182,7 +186,17 @@ public class Basic {
     int n2 = basic.str2.length();
     System.out.println(basic.opt[n1 - 1][n2 - 1]);
     System.out.println(
-    "Complexity analysis: \nTime: " +  time +  " milliseconds\nSpace: " +  space + " KB");
-    basic.writeFile(time, space);
+      "Complexity analysis: \nTime: " +
+      time +
+      " milliseconds\nSpace: " +
+      space +
+      " KB"
+    );
+    File myObj;
+    String ofN = args[1];
+    myObj = new File(ofN);
+    myObj.createNewFile();
+
+    basic.writeFile(ofN, time, space);
   }
 }
