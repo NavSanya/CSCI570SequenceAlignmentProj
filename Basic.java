@@ -4,7 +4,7 @@ import java.util.*;
 public class Basic {
 
   /* Global variables */
-  Map<String, List<Integer>> map;
+  Map<char[], List<Integer>> map;
   String str1;
   String str2;
   int[][] matrix;
@@ -46,7 +46,7 @@ public class Basic {
           list.add(Integer.parseInt(str));
         } else {
           list = new ArrayList<>();
-          map.put(str, list);
+          map.put(str.toCharArray(), list);
         }
       }
       scanner.close();
@@ -58,13 +58,13 @@ public class Basic {
 
   private void generateStrings() {
     boolean first = true;
-    for (Map.Entry<String, List<Integer>> entry : map.entrySet()) {
-      String str = entry.getKey();
+    for (Map.Entry<char[], List<Integer>> entry : map.entrySet()) {
+      char[] str = entry.getKey();
       List<Integer> indices = entry.getValue();
-      sb = new StringBuilder(str);
+      sb = new StringBuilder(new String(str));
       for (int i : indices) {
         sb.insert(i + 1, str);
-        str = sb.toString();
+        str = sb.toString().toCharArray();
       }
       if (first) {
         this.str2 = sb.toString();
@@ -80,19 +80,19 @@ public class Basic {
     try {
       FileWriter myWriter = new FileWriter(fileName);
       String s =
-        opt[str1.length() - 1][str2.length() - 1] + "\n" + finalStr1 + "\n" + finalStr2 + "\n" + time + "\n" + space;
+          opt[str1.length()][str2.length()] + "\n" + finalStr1 + "\n" + finalStr2 + "\n" + time + "\n" + space;
       myWriter.write(s);
       myWriter.close();
     } catch (IOException e) {
       System.out.println("An error occurred.");
       e.printStackTrace();
-    }
-  }
+    } // catch()
+  }// writeFile()
 
   private static double getMemory() {
     double total = Runtime.getRuntime().totalMemory();
     return (total - Runtime.getRuntime().freeMemory()) / 1e3;
-  }
+  }// getMe
 
   private static double getTime() {
     return System.nanoTime() / 1e6;
@@ -109,8 +109,8 @@ public class Basic {
     }
     for (int i = 1; i <= str1.length(); i++) {
       for (int j = 1; j <= str2.length(); j++) {
-        char c1 = str1.charAt(i - 1);/* changed */
-        char c2 = str2.charAt(j - 1);/* changed */
+        char c1 = str1.charAt(i - 1);
+        char c2 = str2.charAt(j - 1);
         int a = charMap.get(c1);
         int b = charMap.get(c2);
         opt[i][j] =
@@ -130,21 +130,14 @@ public class Basic {
     finalStr1 = "";
     finalStr2 = "";
     while (i != 0 || j != 0) {
-      //mismatch check
-      if (
-        i >= 1 &&
-        j >= 1 &&
-        opt[i][j] ==
-        matrix[charMap.get(str1.charAt(i - 1))][charMap.get(
-            str2.charAt(j - 1)
-          )] +
-        opt[i - 1][j - 1]
-      ) {
+      if ((i >= 1) && (j >= 1)
+          && (opt[i][j] == matrix[charMap.get(str1.charAt(i - 1))][(charMap.get(str2.charAt(j - 1)))]
+              + opt[i - 1][j - 1])) {
         finalStr1 += (str1.charAt(i - 1));
         finalStr2 += (str2.charAt(j - 1));
         i--;
         j--;
-      } else if (j >= 1 && opt[i][j] == delta + opt[i][j - 1]) { //gap
+      } else if (j >= 1 && opt[i][j] == delta + opt[i][j - 1]) {
         finalStr1 = finalStr1 + '_';
         finalStr2 = finalStr2 + str2.charAt(j - 1);
         j--;
@@ -169,9 +162,9 @@ public class Basic {
   public static void main(String[] args) throws IOException {
     double startSpace = getMemory();
     double startTime = getTime();
-    String iFN = args[0];
+    String fileInput = args[0];
     Basic basic = new Basic();
-    File file = new File(iFN);
+    File file = new File(fileInput);
     basic.readFile(file);
     basic.alignment();
     basic.getFinalString();
@@ -179,24 +172,10 @@ public class Basic {
     double endTime = getTime();
     double space = endSpace - startSpace;
     double time = endTime - startTime;
-    System.out.println("Strings: ");
-    System.out.println("String 1: " + basic.finalStr1);
-    System.out.println("String 2: " + basic.finalStr2);
-    int n1 = basic.str1.length();
-    int n2 = basic.str2.length();
-    System.out.println(basic.opt[n1 - 1][n2 - 1]);
-    System.out.println(
-      "Complexity analysis: \nTime: " +
-      time +
-      " milliseconds\nSpace: " +
-      space +
-      " KB"
-    );
     File myObj;
-    String ofN = args[1];
-    myObj = new File(ofN);
+    String fileOutput = args[1];
+    myObj = new File(fileOutput);
     myObj.createNewFile();
-
-    basic.writeFile(ofN, time, space);
+    basic.writeFile(fileOutput, time, space);
   }
 }
