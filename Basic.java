@@ -19,13 +19,12 @@ public class Basic {
   public Basic() {
     this.map = new HashMap<>();
     this.sb = new StringBuilder();
-    matrix =
-      new int[][] {
+    matrix = new int[][] {
         { 0, 110, 48, 94 },
         { 110, 0, 118, 48 },
         { 48, 118, 0, 110 },
         { 94, 48, 110, 0 },
-      };
+    };
     this.charMap = new HashMap<>();
     charMap.put('A', 0);
     charMap.put('C', 1);
@@ -36,6 +35,7 @@ public class Basic {
   }
 
   /* Functions */
+  /* reads data from input file */
   public void readFile(File file) {
     try {
       this.scanner = new Scanner(file);
@@ -56,6 +56,7 @@ public class Basic {
     generateStrings();
   }
 
+  /* generates the strings from the input data format */
   private void generateStrings() {
     boolean first = true;
     for (Map.Entry<char[], List<Integer>> entry : map.entrySet()) {
@@ -76,11 +77,11 @@ public class Basic {
     }
   }
 
+  /* writes output, time complexity and space complexity to file */
   public void writeFile(String fileName, double time, double space) {
     try {
       FileWriter myWriter = new FileWriter(fileName);
-      String s =
-          opt[str1.length()][str2.length()] + "\n" + finalStr1 + "\n" + finalStr2 + "\n" + time + "\n" + space;
+      String s = opt[str1.length()][str2.length()] + "\n" + finalStr1 + "\n" + finalStr2 + "\n" + time + "\n" + space;
       myWriter.write(s);
       myWriter.close();
     } catch (IOException e) {
@@ -89,15 +90,18 @@ public class Basic {
     } // catch()
   }// writeFile()
 
+  /* gets the memory space used in KB */
   private static double getMemory() {
     double total = Runtime.getRuntime().totalMemory();
     return (total - Runtime.getRuntime().freeMemory()) / 1e3;
   }// getMe
 
+  /* gets the time in seconds */
   private static double getTime() {
     return System.nanoTime() / 1e6;
   }
 
+  /* handles the core sequence alignment functionality */
   public void alignment() {
     opt = new int[str1.length() + 1][str2.length() + 1];
 
@@ -113,52 +117,44 @@ public class Basic {
         char c2 = str2.charAt(j - 1);
         int a = charMap.get(c1);
         int b = charMap.get(c2);
-        opt[i][j] =
-          Math.min(
+        opt[i][j] = Math.min(
             matrix[a][b] + opt[i - 1][j - 1],
-            delta + Math.min(opt[i][j - 1], opt[i - 1][j])
-          );
+            delta + Math.min(opt[i][j - 1], opt[i - 1][j]));
       }
     }
   }
 
+  /* gets the final string */
   private void getFinalString() {
-    int l1 = str1.length();
-    int l2 = str2.length();
-    int i = l1;
-    int j = l2;
-    finalStr1 = "";
-    finalStr2 = "";
+    int i = str1.length();
+    int j = str2.length();
+    StringBuilder input1 = new StringBuilder();
+    StringBuilder input2 = new StringBuilder();
     while (i != 0 || j != 0) {
       if ((i >= 1) && (j >= 1)
           && (opt[i][j] == matrix[charMap.get(str1.charAt(i - 1))][(charMap.get(str2.charAt(j - 1)))]
               + opt[i - 1][j - 1])) {
-        finalStr1 += (str1.charAt(i - 1));
-        finalStr2 += (str2.charAt(j - 1));
+        input1.append(str1.charAt(i - 1));
+        input2.append(str2.charAt(j - 1));
         i--;
         j--;
       } else if (j >= 1 && opt[i][j] == delta + opt[i][j - 1]) {
-        finalStr1 = finalStr1 + '_';
-        finalStr2 = finalStr2 + str2.charAt(j - 1);
+        input1.append('_');
+        input2.append(str2.charAt(j - 1));
         j--;
-      } else { //gap
-        finalStr1 = finalStr1 + str1.charAt(i - 1);
-        finalStr2 = finalStr2 + '_';
+      } else { // gap
+        input1.append(str1.charAt(i - 1));
+        input2.append('_');
         i--;
       }
     }
-
-    StringBuilder input1 = new StringBuilder();
-    input1.append(finalStr1);
     input1.reverse();
     finalStr1 = input1.toString();
-
-    StringBuilder input2 = new StringBuilder();
-    input2.append(finalStr2);
     input2.reverse();
     finalStr2 = input2.toString();
   }
 
+  /* main function */
   public static void main(String[] args) throws IOException {
     double startSpace = getMemory();
     double startTime = getTime();
