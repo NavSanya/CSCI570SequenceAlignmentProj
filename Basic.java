@@ -93,12 +93,12 @@ public class Basic {
   /* gets the memory space used in KB */
   private static double getMemory() {
     double total = Runtime.getRuntime().totalMemory();
-    return (total - Runtime.getRuntime().freeMemory()) / 1e3;
+    return (total - Runtime.getRuntime().freeMemory()) / 10e3;
   }// getMe
 
   /* gets the time in seconds */
   private static double getTime() {
-    return System.nanoTime() / 1e6;
+    return System.nanoTime() / 10e6;
   }
 
   /* handles the core sequence alignment functionality */
@@ -156,22 +156,21 @@ public class Basic {
 
   /* main function */
   public static void main(String[] args) throws IOException {
+    String inputFilename = args[0];
+    String outputFilename = args[1];
     double startSpace = getMemory();
     double startTime = getTime();
-    String fileInput = args[0];
     Basic basic = new Basic();
-    File file = new File(fileInput);
-    basic.readFile(file);
+    File inputFile = new File(inputFilename);
+    basic.readFile(inputFile);
     basic.alignment();
     basic.getFinalString();
     double endSpace = getMemory();
     double endTime = getTime();
     double space = endSpace - startSpace;
     double time = endTime - startTime;
-    File myObj;
-    String fileOutput = args[1];
-    myObj = new File(fileOutput);
-    myObj.createNewFile();
-    basic.writeFile(fileOutput, time, space);
+    File outputFile = new File(outputFilename);
+    outputFile.createNewFile();
+    basic.writeFile(outputFilename, time, space);
   }
 }
