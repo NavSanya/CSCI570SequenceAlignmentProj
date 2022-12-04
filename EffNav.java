@@ -102,21 +102,22 @@ public class EffNav {
     } catch (IOException e) {
       System.out.println("An error occurred.");
       e.printStackTrace();
-    } // catch()
-  } // writeFile()
+    } 
+  } 
 
   /* gets the memory space used in KB */
-  private static double getMemory() {
+  private static double getMemoryInKB() {
     double total = Runtime.getRuntime().totalMemory();
-    return (total - Runtime.getRuntime().freeMemory()) / 10e3;
-  } // getMe
+    return (total-Runtime.getRuntime().freeMemory())/10e3;
+    }
 
   /* gets the time in seconds */
-  private static double getTime() {
-    return System.nanoTime() / 10e6;
+  private static double getTimeInMilliseconds() {
+    return System.nanoTime()/10e6;
   }
+    
 
-  /* handles the core sequence alignment functionality */
+  /* handles the basic sequence alignment functionality */
   public int alignmentBasic(String str1, String str2) {
     int[][] opt = new int[str1.length() + 1][str2.length() + 1];
 
@@ -228,6 +229,7 @@ public class EffNav {
 
     int[] leftToRight = costOfSplit(xLeft, y);
     int[] rightToLeft = costOfSplit(reverseString(xRight), reverseString(y));
+    // int[] rightToLeft = costOfSplit(xRight, y);
 
     int splitIndex = -1;
     int minCost = Integer.MAX_VALUE;
@@ -242,7 +244,7 @@ public class EffNav {
 
     String[] left = sequenceAlignmentEfficient(xLeft, y.substring(0, splitIndex));
     String[] right = sequenceAlignmentEfficient(xRight, y.substring(splitIndex));
-
+      
     s[0] = left[0] + right[0];
     s[1] = left[1] + right[1];
     s[2] = (Integer.parseInt(left[2])+Integer.parseInt(right[2])) + "";
@@ -253,8 +255,10 @@ public class EffNav {
   public static void main(String[] args) throws IOException {
     String inputFilename = args[0];
     String outputFilename = args[1];
-    double startSpace = getMemory();
-    double startTime = getTime();
+    // String inputFilename = "SampleTestCases/input1.txt";
+    // String outputFilename = "MyOutput.txt";
+    double startSpace = getMemoryInKB();
+    double startTime = getTimeInMilliseconds();
     EffNav eff = new EffNav();
     File inputFile = new File(inputFilename);
     eff.readFile(inputFile);
@@ -263,8 +267,8 @@ public class EffNav {
     eff.finalStr2 = s[1]+eff.finalStr2;
     int minCost = Integer.parseInt(s[2]);
     
-    double endSpace = getMemory();
-    double endTime = getTime();
+    double endSpace = getMemoryInKB();
+    double endTime = getTimeInMilliseconds();
     double space = endSpace - startSpace;
     double time = endTime - startTime;
     File outputFile = new File(outputFilename);
