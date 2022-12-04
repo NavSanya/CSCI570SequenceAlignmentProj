@@ -214,9 +214,13 @@ public class EffNav {
     return optVal;
   }
 
-  public int sequenceAlignmentEfficient(String x, String y) {
+  public String[] sequenceAlignmentEfficient(String x, String y) {
+    String[] s = new String[3]; 
     if (x.length() <= 2 || y.length() <= 2) {
-      return alignmentBasic(x, y);
+       s[0] = finalStr1;
+       s[1] = finalStr2;
+       s[2] = alignmentBasic(x,y)+"";
+       return s;
     }
 
     String xLeft = x.substring(0, x.length() / 2);
@@ -236,10 +240,13 @@ public class EffNav {
       }
     }
 
-    int left = sequenceAlignmentEfficient(xLeft, y.substring(0, splitIndex));
-    int right = sequenceAlignmentEfficient(xRight, y.substring(splitIndex));
+    String[] left = sequenceAlignmentEfficient(xLeft, y.substring(0, splitIndex));
+    String[] right = sequenceAlignmentEfficient(xRight, y.substring(splitIndex));
 
-    return left + right;
+    s[0] = left[0] + right[0];
+    s[1] = left[1] + right[1];
+    s[2] = (Integer.parseInt(left[2])+Integer.parseInt(right[2])) + "";
+    return s;
   }
 
   /* main function */
@@ -251,7 +258,11 @@ public class EffNav {
     EffNav eff = new EffNav();
     File inputFile = new File(inputFilename);
     eff.readFile(inputFile);
-    int minCost = eff.sequenceAlignmentEfficient(eff.str1, eff.str2);
+    String s[] = eff.sequenceAlignmentEfficient(eff.str1, eff.str2);
+    eff.finalStr1 = s[0]+eff.finalStr1;
+    eff.finalStr2 = s[1]+eff.finalStr2;
+    int minCost = Integer.parseInt(s[2]);
+    
     double endSpace = getMemory();
     double endTime = getTime();
     double space = endSpace - startSpace;
