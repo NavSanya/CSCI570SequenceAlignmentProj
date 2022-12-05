@@ -80,8 +80,9 @@ public class Basic {
   /* writes output, time complexity and space complexity to file */
   public void writeFile(String fileName, double time, double space) {
     try {
-      FileWriter myWriter = new FileWriter(fileName);
-      String s = opt[str1.length()][str2.length()] + "\n" + finalStr1 + "\n" + finalStr2 + "\n" + time + "\n" + space;
+      FileWriter myWriter = new FileWriter(fileName, true);
+      String s = opt[str1.length()][str2.length()] + "\n" + finalStr1 + "\n" + finalStr2 + "\n" + time + "\n" + space
+          + "\n\n";
       myWriter.write(s);
       myWriter.close();
     } catch (IOException e) {

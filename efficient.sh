@@ -1,2 +1,2 @@
-javac Efficient.java
-java Efficient "$1" "$2"
+javac EfficientSolutionBiola.java
+java EfficientSolutionBiola "$1" "$2"
