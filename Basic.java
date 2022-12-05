@@ -81,8 +81,10 @@ public class Basic {
   public void writeFile(String fileName, double time, double space) {
     try {
       FileWriter myWriter = new FileWriter(fileName, true);
-      String s = opt[str1.length()][str2.length()] + "\n" + finalStr1 + "\n" + finalStr2 + "\n" + time + "\n" + space
-          + "\n\n";
+      // String s = opt[str1.length()][str2.length()] + "\n" + finalStr1 + "\n" +
+      // finalStr2 + "\n" + time + "\n" + space
+      // + "\n\n";
+      String s = str1.length() + str2.length() + "," + time + "," + space + "\n";
       myWriter.write(s);
       myWriter.close();
     } catch (IOException e) {

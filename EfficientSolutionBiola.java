@@ -197,7 +197,10 @@ public class EfficientSolutionBiola {
   public void writeFile(String fileName, double time, double space, String[] result) {
     try {
       FileWriter myWriter = new FileWriter(fileName, true);
-      myWriter.write(result[2] + "\n" + result[0] + "\n" + result[1] + "\n" + time + "\n" + space + "\n\n");
+      // String s = result[2] + "\n" + result[0] + "\n" + result[1] + "\n" + time +
+      // "\n" + space + "\n\n";
+      String s = str1.length() + str2.length() + "," + time + "," + space + "\n";
+      myWriter.write(s);
       myWriter.close();
     } catch (IOException e) {
       System.out.println("An error occurred.");
