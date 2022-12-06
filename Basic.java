@@ -2,20 +2,22 @@ import java.io.*;
 import java.util.*;
 
 public class Basic {
+  /* constant */
+  final int DELTA = 30;
 
   /* Global variables */
   Map<char[], List<Integer>> map;
-  String str1;
-  String str2;
+  Map<Character, Integer> charMap;
   int[][] matrix;
   Scanner scanner;
   StringBuilder sb;
-  int delta = 30;
-  Map<Character, Integer> charMap;
   int[][] opt;
+  String str1;
+  String str2;
   String finalStr1;
   String finalStr2;
 
+  /* default constructor */
   public Basic() {
     this.map = new HashMap<>();
     this.sb = new StringBuilder();
@@ -32,9 +34,8 @@ public class Basic {
     charMap.put('T', 3);
     finalStr1 = "";
     finalStr2 = "";
-  }
+  } // Basic()
 
-  /* Functions */
   /* reads data from input file */
   public void readFile(File file) {
     try {
@@ -53,8 +54,7 @@ public class Basic {
     } catch (FileNotFoundException e) {
       System.out.println("File not found");
     }
-    generateStrings();
-  }
+  } // readFile()
 
   /* generates the strings from the input data format */
   private void generateStrings() {
@@ -75,7 +75,7 @@ public class Basic {
         this.str1 = sb.toString();
       }
     }
-  }
+  }// generateStrings()
 
   /* writes output, time complexity and space complexity to file */
   public void writeFile(String fileName, double time, double space) {
@@ -90,29 +90,29 @@ public class Basic {
     } catch (IOException e) {
       System.out.println("An error occurred.");
       e.printStackTrace();
-    } // catch()
+    }
   }// writeFile()
 
   /* gets the memory space used in KB */
   private static double getMemory() {
     double total = Runtime.getRuntime().totalMemory();
-    return (total - Runtime.getRuntime().freeMemory()) / 10e3;
-  }// getMe
+    return (total - Runtime.getRuntime().freeMemory()) / 1e3;
+  }// getMemory()
 
   /* gets the time in seconds */
   private static double getTime() {
-    return System.nanoTime() / 10e6;
-  }
+    return System.nanoTime() / 1e6;
+  }// getTime()
 
   /* handles the core sequence alignment functionality */
   public void alignment() {
     opt = new int[str1.length() + 1][str2.length() + 1];
 
     for (int i = 0; i <= str1.length(); i++) {
-      opt[i][0] = delta * i;
+      opt[i][0] = DELTA * i;
     }
     for (int i = 0; i <= str2.length(); i++) {
-      opt[0][i] = delta * i;
+      opt[0][i] = DELTA * i;
     }
     for (int i = 1; i <= str1.length(); i++) {
       for (int j = 1; j <= str2.length(); j++) {
@@ -122,10 +122,10 @@ public class Basic {
         int b = charMap.get(c2);
         opt[i][j] = Math.min(
             matrix[a][b] + opt[i - 1][j - 1],
-            delta + Math.min(opt[i][j - 1], opt[i - 1][j]));
+            DELTA + Math.min(opt[i][j - 1], opt[i - 1][j]));
       }
     }
-  }
+  }// alignment()
 
   /* gets the final string */
   private void getFinalString() {
@@ -141,7 +141,7 @@ public class Basic {
         input2.append(str2.charAt(j - 1));
         i--;
         j--;
-      } else if (j >= 1 && opt[i][j] == delta + opt[i][j - 1]) {
+      } else if (j >= 1 && opt[i][j] == DELTA + opt[i][j - 1]) {
         input1.append('_');
         input2.append(str2.charAt(j - 1));
         j--;
@@ -155,7 +155,7 @@ public class Basic {
     finalStr1 = input1.toString();
     input2.reverse();
     finalStr2 = input2.toString();
-  }
+  } // getFinalString()
 
   /* main function */
   public static void main(String[] args) throws IOException {
@@ -166,6 +166,7 @@ public class Basic {
     Basic basic = new Basic();
     File inputFile = new File(inputFilename);
     basic.readFile(inputFile);
+    basic.generateStrings();
     basic.alignment();
     basic.getFinalString();
     double endSpace = getMemory();

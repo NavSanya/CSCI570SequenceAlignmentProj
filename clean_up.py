@@ -56,7 +56,7 @@ def main():
 
     file_one_result = process_file(file_one)
     file_two_result = process_file(file_two)
-    print("{}\n{}".format(file_one_result, file_two_result))
+
     summary = combine(file_one_result, file_two_result)
     write(fields, summary)
 
