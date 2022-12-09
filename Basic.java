@@ -34,7 +34,7 @@ public class Basic {
     charMap.put('T', 3);
     finalStr1 = "";
     finalStr2 = "";
-  } // Basic()
+  }
 
   /* reads data from input file */
   public void readFile(File file) {
@@ -54,7 +54,7 @@ public class Basic {
     } catch (FileNotFoundException e) {
       System.out.println("File not found");
     }
-  } // readFile()
+  }
 
   /* generates the strings from the input data format */
   private void generateStrings() {
@@ -75,7 +75,7 @@ public class Basic {
         this.str1 = sb.toString();
       }
     }
-  }// generateStrings()
+  }
 
   /* writes output, time complexity and space complexity to file */
   public void writeFile(String fileName, double time, double space) {
@@ -91,18 +91,18 @@ public class Basic {
       System.out.println("An error occurred.");
       e.printStackTrace();
     }
-  }// writeFile()
+  }
 
   /* gets the memory space used in KB */
   private static double getMemory() {
     double total = Runtime.getRuntime().totalMemory();
-    return (total - Runtime.getRuntime().freeMemory()) / 1e3;
-  }// getMemory()
+    return (total - Runtime.getRuntime().freeMemory()) / 10e3;
+  }
 
   /* gets the time in seconds */
   private static double getTime() {
-    return System.nanoTime() / 1e6;
-  }// getTime()
+    return System.nanoTime() / 10e6;
+  }
 
   /* handles the core sequence alignment functionality */
   public void alignment() {
@@ -125,7 +125,7 @@ public class Basic {
             DELTA + Math.min(opt[i][j - 1], opt[i - 1][j]));
       }
     }
-  }// alignment()
+  }
 
   /* gets the final string */
   private void getFinalString() {
@@ -145,7 +145,7 @@ public class Basic {
         input1.append('_');
         input2.append(str2.charAt(j - 1));
         j--;
-      } else { // gap
+      } else {
         input1.append(str1.charAt(i - 1));
         input2.append('_');
         i--;
@@ -155,7 +155,7 @@ public class Basic {
     finalStr1 = input1.toString();
     input2.reverse();
     finalStr2 = input2.toString();
-  } // getFinalString()
+  }
 
   /* main function */
   public static void main(String[] args) throws IOException {

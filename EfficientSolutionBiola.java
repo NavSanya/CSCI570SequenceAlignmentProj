@@ -33,7 +33,7 @@ public class EfficientSolutionBiola {
     charMap.put('T', 3);
     builder1 = new StringBuilder();
     builder2 = new StringBuilder();
-  } // EfficientSolutionBiola()
+  }
 
   /* computes the similarities between 2 strings */
   private int[][] align(String x, String y) {
@@ -56,7 +56,7 @@ public class EfficientSolutionBiola {
       }
     }
     return opt;
-  } // align(str1, str2)
+  }
 
   /* reverses string */
   private String reverse(String str) {
@@ -65,7 +65,7 @@ public class EfficientSolutionBiola {
     String reversed = sb.reverse().toString();
     sb.setLength(0);
     return reversed;
-  } // reverse(str)
+  }
 
   /* finds the split point for the divide step */
   private int findSplitPoint(String x, String y) {
@@ -86,7 +86,7 @@ public class EfficientSolutionBiola {
       }
     }
     return splitYAt;
-  } // findSplitPoint(str1, str2)
+  }
 
   /* gets the final strings and cost */
   public String[] getFinalString(String x, String y, int[][] opt) {
@@ -108,7 +108,7 @@ public class EfficientSolutionBiola {
         builder1.append('_');
         builder2.append(y.charAt(j - 1));
         j--;
-      } else { // gap
+      } else {
         builder1.append(x.charAt(i - 1));
         builder2.append('_');
         i--;
@@ -140,7 +140,7 @@ public class EfficientSolutionBiola {
     String cost = Integer.toString(Integer.parseInt(leftHalf[2]) + Integer.parseInt(rightHalf[2]));
 
     return new String[] { leftHalf[0] + rightHalf[0], leftHalf[1] + rightHalf[1], cost };
-  } // alignment(str1, str2)
+  }
 
   /* processes input data to generate strings */
   private void generateStrings() {
@@ -161,7 +161,7 @@ public class EfficientSolutionBiola {
         this.str1 = sb.toString();
       }
     }
-  } // generateStrings()
+  }
 
   /* reads input data */
   public void readFile(File file) {
@@ -181,18 +181,18 @@ public class EfficientSolutionBiola {
     } catch (FileNotFoundException e) {
       System.out.println("File not found");
     }
-  } // readFile(file)
+  }
 
   /* gets the memory space used in KB */
   private static double getMemory() {
     double total = Runtime.getRuntime().totalMemory();
-    return (total - Runtime.getRuntime().freeMemory()) / 1e3;
-  } // getMemory()
+    return (total - Runtime.getRuntime().freeMemory()) / 10e3;
+  }
 
   /* gets the time in seconds */
   private static double getTime() {
-    return System.nanoTime() / 1e6;
-  } // getTime()
+    return System.nanoTime() / 10e6;
+  }
 
   /* writes output, time complexity and space complexity to file */
   public void writeFile(String fileName, double time, double space, String[] result) {
@@ -207,7 +207,7 @@ public class EfficientSolutionBiola {
       System.out.println("An error occurred.");
       e.printStackTrace();
     }
-  } // writeFile(filename, time, space, result)
+  }
 
   public static void main(String[] args) throws IOException {
     String inputFilename = args[0];
